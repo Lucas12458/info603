@@ -17,9 +17,33 @@ public class Rails {
     
     
 
-    public Rails obtenirRailSuivant(final String sens) {
+    public Rails getSuivant() {
+		return suivant;
+	}
+
+
+
+	public void setSuivant(Rails suivant) {
+		this.suivant = suivant;
+	}
+
+
+
+	public Rails getPrecedent() {
+		return precedent;
+	}
+
+
+
+	public void setPrecedent(Rails precedent) {
+		this.precedent = precedent;
+	}
+
+
+
+	public Rails obtenirRailSuivant(final String sens) {
     	Rails res;
-        if(sens.equals("horaire")) {
+        if("horaire".equals(sens)) {
         	res = this.suivant;
         	
         }
@@ -31,7 +55,13 @@ public class Rails {
     
     
 
-    public void alerteTrain(final int compteur) {
+    public void alerteTrain(final int compteur,String sens) {
+    	if(compteur != 0) {
+    		obtenirRailSuivant(sens).alerteTrain(compteur-1, sens);
+    	}
+    	
+    	
+    	
     }
 
     public int finAlerte(final int compteur) {

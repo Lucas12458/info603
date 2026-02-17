@@ -5,6 +5,8 @@ public class Train {
     private String sensCirculation;
     private int taille;
     private Voiture voitureTete;
+   
+    private boolean etat = false;
     
     public Train(String sens,TypeVoiture type){
     	this.sensCirculation = sens;
@@ -22,8 +24,24 @@ public class Train {
     	else {
     		this.sensCirculation = "horaire";
     	}
+    	
+    	Voiture precedent = null;
+        Voiture courant = this.voitureTete;
+        Voiture suivant = null;
+        
+        while (courant != null) {
+            suivant = courant.obtenirVoitureSuivante(); 
+            courant.setVoitureSuivante(precedent); 
+            
+            precedent = courant;
+            courant = suivant;
+        }
+
+       
+        this.voitureTete = precedent;
     }
-    
+    	
+    	
     public void ajouterVoiture(TypeVoiture type) {
     	
     	Voiture voiture = new Voiture(type);
@@ -42,8 +60,13 @@ public class Train {
     
 
     public boolean demarrer() {
-    	this.voitureTete.deplacer(voitureTete);
-        return false;
+    	this.etat = true;
+    	
+    	while(this.etat) {
+    		this.voitureTete.deplacer(this.sensCirculation);
+    		this.voitureTete.alerteTrain(this.sensCirculation);
+    	}
+        return true;
     }
 
     public Voiture obtenirVoitureTete() {

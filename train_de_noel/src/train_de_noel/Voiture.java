@@ -6,7 +6,7 @@ public class Voiture {
 
     private Voiture voitureSuivante;
 
-    private Rails estSur;
+    private Rails rail;
     
     public Voiture(TypeVoiture type) {
     	this.type = type;
@@ -15,21 +15,37 @@ public class Voiture {
     
     }
     
-    
+    public Rails getRail() {
+		return rail;
+	}
 
-    public void deplacer(final Voiture voiture) {
+    public void setRail(Rails rail) {
+		this.rail = rail;
+	}
+
+
+    public void deplacer(String sens) {
+    	
+    	changeRail(this.rail.obtenirRailSuivant(sens));
+    	
+    	if(this.voitureSuivante != null) {
+    		this.voitureSuivante.deplacer(sens);
+    	}
+    	
     }
 
     public void changeRail(final Rails railSuivant) {
+    	this.rail = railSuivant;
     }
 
     public boolean estSur(final Rails rail) {
-        // TODO Auto-generated return
-        return false;
+        return this.rail.equals(rail);
+        
     }
 
-    public boolean alerteTrain() {
-        // TODO Auto-generated return
+    public boolean alerteTrain(String sens) {
+        this.rail.alerteTrain(2, sens);
+        
         return false;
     }
 

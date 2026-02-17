@@ -2,7 +2,12 @@ package train_de_noel;
 
 
 public class Aiguillage extends Rails {
-    private String position;
+    public Aiguillage(TypeRail type) {
+		super(type);
+		// TODO Auto-generated constructor stub
+	}
+
+	private String position;
 
     private Rails rail;
 

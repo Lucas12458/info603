@@ -2,7 +2,17 @@ package train_de_noel;
 
 
 public class PassageNiveau extends Rails {
-    private void fermerPAN() {
+    public PassageNiveau(TypeRail type) {
+		super(type);
+		// TODO Auto-generated constructor stub
+	}
+    
+    @Override
+    public void alerteTrain(final int compteur,String sens) {
+    	fermerPAN();
+    }
+
+	private void fermerPAN() {
     	
     }
 

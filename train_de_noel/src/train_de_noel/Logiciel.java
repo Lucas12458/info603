@@ -2,7 +2,7 @@ package train_de_noel;
 
 
 public class Logiciel {
-    private Train dispose;
+    private Train train;
     
     private Circuit circuit;
     
@@ -11,16 +11,32 @@ public class Logiciel {
     	System.out.println("Test");
     	
     	
+    	new Logiciel();
+    }
+    
+    public Logiciel() {
+    	String sens = "antihoraire";
+		
+    	this.train = new Train(sens,TypeVoiture.Locomotive);
     	
-    	TypeRail type = TypeRail.droit;
-		String sens = "antihoraire";
-		Circuit circuit = new Circuit(type,sens);
-    	Train train = new Train(sens,TypeVoiture.Locomotive);
+    	this.circuit = new Circuit(sens);
+    	
+    	circuit.ajouterRail(TypeRail.virage_gauche);
+    	circuit.ajouterRail(TypeRail.droit);
+    	circuit.ajouterRail(TypeRail.virage_gauche);
+    	circuit.ajouterRail(TypeRail.passageNiveau);
+    	circuit.ajouterRail(TypeRail.droit);
+    	circuit.ajouterRail(TypeRail.aiguillage);
+    	circuit.ajouterRail(TypeRail.droit);
+    	circuit.ajouterRail(TypeRail.virage_gauche);
+    	circuit.ajouterRail(TypeRail.aiguillage);
+    	
+    	//train.demarrer();
     	
     	
-    	
-
-	}
+    }
+    
+    
     
     
 
