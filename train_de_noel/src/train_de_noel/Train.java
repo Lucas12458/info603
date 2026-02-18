@@ -5,6 +5,7 @@ public class Train {
     private String sensCirculation;
     private int taille;
     private Voiture voitureTete;
+    
    
     private boolean etat = false;
     
@@ -54,18 +55,50 @@ public class Train {
     public String obtenirSensCirculation() {
     	return this.sensCirculation;
     }
+    
+    private boolean estSurUnPAN() {
+        Voiture courante = this.voitureTete;
+        while (courante != null) {
+            
+            if (courante.getRail() instanceof PassageNiveau) {
+                return true; 
+            }
+            courante = courante.obtenirVoitureSuivante();
+        }
+        return false; 
+    }
     	
     
-    
-    
+    private boolean attenteLiberation = false;
 
     public boolean demarrer() {
-    	this.etat = true;
-    	
-    	while(this.etat) {
-    		this.voitureTete.deplacer(this.sensCirculation);
-    		this.voitureTete.alerteTrain(this.sensCirculation);
-    	}
+        this.etat = true;
+        
+        while(this.etat) {
+           
+            this.voitureTete.deplacer(this.sensCirculation);
+            
+           
+            boolean panDetecte = this.voitureTete.alerteTrain(this.sensCirculation);
+            
+            if (panDetecte) {
+                this.attenteLiberation = true;
+            }
+
+           
+            if (this.attenteLiberation && !this.estSurUnPAN()) {
+                String sensInverse = this.sensCirculation.equals("horaire") ? "antihoraire" : "horaire";
+                
+               
+                if (obtenirVoitureQueue().finAlerte(sensInverse)) {
+                    
+                    this.attenteLiberation = false;
+                }
+            }
+            System.out.println("La voiture de tête est sur " + this.voitureTete.getRail().getType());
+
+            try { Thread.sleep(800); } catch (InterruptedException e) { this.etat = false; }
+        }
         return true;
     }
 
@@ -81,5 +114,57 @@ public class Train {
     	}
         return voitureCourante;
     }
+    
+    
+    public void poserSurCircuit(Rails railDepart) {
+        if (railDepart == null || this.voitureTete == null) {
+            return;
+        }
 
+        
+        String sensArriere = this.sensCirculation.equals("horaire") ? "antihoraire" : "horaire";
+
+        Voiture voitureCourante = this.voitureTete;
+        Rails railCourant = railDepart;
+
+        while (voitureCourante != null) {
+           
+            voitureCourante.changeRail(railCourant);
+            
+           
+            voitureCourante = voitureCourante.obtenirVoitureSuivante();
+            
+            
+            if (voitureCourante != null) {
+                railCourant = railCourant.obtenirRailSuivant(sensArriere);
+            }
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Train [sensCirculation=").append(sensCirculation)
+          .append(", taille=").append(taille)
+          .append(", etat=").append(etat)
+          .append(", composition=");
+
+        
+        sb.append("[");
+        Voiture courant = this.voitureTete;
+        while (courant != null) {
+            sb.append(courant.getType()); 
+            
+            courant = courant.obtenirVoitureSuivante();
+            
+           
+            if (courant != null) {
+                sb.append(" -> ");
+            }
+        }
+        sb.append("]]");
+
+        return sb.toString();
+    }
 }

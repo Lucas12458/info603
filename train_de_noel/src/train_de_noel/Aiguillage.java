@@ -4,7 +4,7 @@ package train_de_noel;
 public class Aiguillage extends Rails {
     public Aiguillage(TypeRail type) {
 		super(type);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	private String position;
@@ -15,7 +15,7 @@ public class Aiguillage extends Rails {
     }
 
     public Rails obtenirRailDeroute() {
-        // TODO Auto-generated return
+       
         return null;
     }
 

@@ -7,17 +7,16 @@ public class Logiciel {
     private Circuit circuit;
     
     public static void main(String[] args) {
-		// TODO Auto-generated method stub
-    	System.out.println("Test");
-    	
-    	
-    	new Logiciel();
+		new Logiciel();
     }
     
     public Logiciel() {
     	String sens = "antihoraire";
 		
     	this.train = new Train(sens,TypeVoiture.Locomotive);
+    	
+    	train.ajouterVoiture(TypeVoiture.Wagon);
+    	train.ajouterVoiture(TypeVoiture.VoitureVoyageur);
     	
     	this.circuit = new Circuit(sens);
     	
@@ -31,7 +30,19 @@ public class Logiciel {
     	circuit.ajouterRail(TypeRail.virage_gauche);
     	circuit.ajouterRail(TypeRail.aiguillage);
     	
-    	//train.demarrer();
+    	System.out.println(this.train.toString());
+    	
+    	//train.choisirSens();
+    	
+    	//System.out.println(this.train.toString());
+    	
+    	
+    	System.out.println(this.circuit.toString());
+    	
+    	
+    	train.poserSurCircuit(circuit.getPremierRail());
+    	
+    	train.demarrer();
     	
     	
     }

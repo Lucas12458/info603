@@ -55,22 +55,27 @@ public class Rails {
     
     
 
-    public void alerteTrain(final int compteur,String sens) {
-    	if(compteur != 0) {
-    		obtenirRailSuivant(sens).alerteTrain(compteur-1, sens);
-    	}
+	public boolean alerteTrain(final int compteur, String sens) {
+	    if (compteur > 0) {
+	        return this.obtenirRailSuivant(sens).alerteTrain(compteur - 1, sens);
+	    }
+	    return false;
+	}
     	
     	
     	
-    }
+    
 
-    public int finAlerte(final int compteur) {
-        // TODO Auto-generated return
-        return 0;
-    }
+	public boolean finAlerte(final int compteur, String sens) {
+	    if (compteur >= 0) {
+	        
+	        return this.obtenirRailSuivant(sens).finAlerte(compteur - 1, sens);
+	    }
+	    return false; 
+	}
 
     public TypeRail getType() {
-        // Automatically generated method. Please delete this comment before entering specific code.
+       
         return this.type;
     }
 

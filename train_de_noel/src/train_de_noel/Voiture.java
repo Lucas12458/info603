@@ -34,7 +34,11 @@ public class Voiture {
     	
     }
 
-    public void changeRail(final Rails railSuivant) {
+    public TypeVoiture getType() {
+		return type;
+	}
+
+	public void changeRail(final Rails railSuivant) {
     	this.rail = railSuivant;
     }
 
@@ -44,12 +48,20 @@ public class Voiture {
     }
 
     public boolean alerteTrain(String sens) {
-        this.rail.alerteTrain(2, sens);
+    	if (this.rail != null) {
+    		return this.rail.alerteTrain(2, sens);
+    	}
+    	 return false;
         
-        return false;
+        
     }
 
-    public void finAlerte() {
+    public boolean finAlerte(String sens) {
+        if (this.rail != null) {
+           
+            return this.rail.finAlerte(2, sens);
+        }
+        return false;
     }
     
     

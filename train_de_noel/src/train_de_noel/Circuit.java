@@ -16,7 +16,17 @@ public class Circuit {
 	}
 	
 	public void ajouterRail(TypeRail type) {
-	    Rails nouveauRail = new Rails(type);
+		Rails nouveauRail;
+		if(type.equals(TypeRail.passageNiveau)) {
+			nouveauRail = new PassageNiveau(type);
+		}
+		else if(type.equals(TypeRail.aiguillage)) {
+			nouveauRail = new Aiguillage(type);
+		}
+		else {
+			nouveauRail = new Rails(type);
+		}
+	    
 
 	    if (this.premierRail == null) {
 	        
@@ -36,6 +46,31 @@ public class Circuit {
 	        nouveauRail.setSuivant(this.premierRail);
 	        this.premierRail.setPrecedent(nouveauRail);
 	    }
+	}
+
+	@Override
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append("Circuit [sens=").append(sens).append(", rails=[");
+
+	    if (this.premierRail != null) {
+	        Rails courant = this.premierRail;
+	        
+	      
+	        do {
+	            sb.append(courant.getType());
+	            courant = courant.getSuivant(); 
+	            
+	            if (courant != this.premierRail) {
+	                sb.append(" <-> ");
+	            }
+	        } while (courant != this.premierRail);
+	    } else {
+	        sb.append("aucun rail");
+	    }
+
+	    sb.append("]]");
+	    return sb.toString();
 	}
 	
 
