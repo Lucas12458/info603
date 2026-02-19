@@ -15,22 +15,35 @@ public class Logiciel {
 		
     	this.train = new Train(sens,TypeVoiture.Locomotive);
     	
+    	Thread threadTrain = new Thread(this.train);
+    	
     	train.ajouterVoiture(TypeVoiture.Wagon);
     	train.ajouterVoiture(TypeVoiture.VoitureVoyageur);
     	
     	this.circuit = new Circuit(sens);
+    	
+    	Aiguillage aiguillage2 = (Aiguillage) circuit.ajouterRail(TypeRail.aiguillage);
     	
     	circuit.ajouterRail(TypeRail.virage_gauche);
     	circuit.ajouterRail(TypeRail.droit);
     	circuit.ajouterRail(TypeRail.virage_gauche);
     	circuit.ajouterRail(TypeRail.passageNiveau);
     	circuit.ajouterRail(TypeRail.droit);
-    	circuit.ajouterRail(TypeRail.aiguillage);
+    	
+    	Aiguillage aiguillage1 = (Aiguillage) circuit.ajouterRail(TypeRail.aiguillage);
+    	
     	circuit.ajouterRail(TypeRail.droit);
     	circuit.ajouterRail(TypeRail.virage_gauche);
-    	circuit.ajouterRail(TypeRail.aiguillage);
+    	
+    	
+    	
+    	//
+    	circuit.ajouterRailBranche(aiguillage1, aiguillage2, TypeRail.droit);
+    	
+    	
     	
     	System.out.println(this.train.toString());
+    	aiguillage1.changerPosition();
     	
     	//train.choisirSens();
     	
@@ -42,10 +55,28 @@ public class Logiciel {
     	
     	train.poserSurCircuit(circuit.getPremierRail());
     	
-    	train.demarrer();
+    	threadTrain.start();
     	
+    	
+    	try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	this.train.arreter();
+    	
+    	
+
+    	
+    	
+    	
+    	    	
     	
     }
+    
+    
     
     
     

@@ -1,13 +1,14 @@
 package train_de_noel;
 
 
-public class Train {
+public class Train implements Runnable{
     private String sensCirculation;
+    private boolean attenteLiberation = false;
     private int taille;
     private Voiture voitureTete;
     
    
-    private boolean etat = false;
+    private volatile boolean etat = false;
     
     public Train(String sens,TypeVoiture type){
     	this.sensCirculation = sens;
@@ -16,6 +17,52 @@ public class Train {
 
 
     }
+    
+    @Override
+	public void run() {
+    	 this.etat = true;
+         System.out.println("Demarrage du train");
+         
+         while(this.etat) {
+            
+             this.voitureTete.deplacer(this.sensCirculation);
+             
+             if(this.voitureTete.getRail() == null) {
+                 System.out.println("Le train a quitté les rails !");
+                 this.arreter();
+                 break;
+             }
+             
+             System.out.println("La voiture de tête est sur " + this.voitureTete.getRail().getType());
+             
+            
+             boolean panDetecte = this.voitureTete.alerteTrain(this.sensCirculation);
+             
+             if (panDetecte) {
+                 this.attenteLiberation = true;
+             }
+
+            
+             if (this.attenteLiberation && !this.estSurUnPAN()) {
+                 String sensInverse = this.sensCirculation.equals("horaire") ? "antihoraire" : "horaire";
+                 
+                
+                 if (obtenirVoitureQueue().finAlerte(sensInverse)) {
+                     
+                     this.attenteLiberation = false;
+                 }
+             }
+             
+             
+             try {
+             	
+             	Thread.sleep(800); 
+             } 
+             catch (InterruptedException e) { this.etat = false; }
+         }
+		
+		
+	}
     
 
     public void choisirSens() {
@@ -69,37 +116,10 @@ public class Train {
     }
     	
     
-    private boolean attenteLiberation = false;
-
-    public boolean demarrer() {
-        this.etat = true;
-        
-        while(this.etat) {
-           
-            this.voitureTete.deplacer(this.sensCirculation);
-            
-           
-            boolean panDetecte = this.voitureTete.alerteTrain(this.sensCirculation);
-            
-            if (panDetecte) {
-                this.attenteLiberation = true;
-            }
-
-           
-            if (this.attenteLiberation && !this.estSurUnPAN()) {
-                String sensInverse = this.sensCirculation.equals("horaire") ? "antihoraire" : "horaire";
-                
-               
-                if (obtenirVoitureQueue().finAlerte(sensInverse)) {
-                    
-                    this.attenteLiberation = false;
-                }
-            }
-            System.out.println("La voiture de tête est sur " + this.voitureTete.getRail().getType());
-
-            try { Thread.sleep(800); } catch (InterruptedException e) { this.etat = false; }
-        }
-        return true;
+    public boolean arreter() {
+    	this.etat = false;
+    	System.out.println("Arrêt du train");
+    	return true;
     }
 
     public Voiture obtenirVoitureTete() {
@@ -167,4 +187,7 @@ public class Train {
 
         return sb.toString();
     }
+
+
+	
 }

@@ -56,10 +56,12 @@ public class Rails {
     
 
 	public boolean alerteTrain(final int compteur, String sens) {
-	    if (compteur > 0) {
-	        return this.obtenirRailSuivant(sens).alerteTrain(compteur - 1, sens);
-	    }
-	    return false;
+		if(this.obtenirRailSuivant(sens) != null) {
+			if (compteur > 0) {
+				return this.obtenirRailSuivant(sens).alerteTrain(compteur - 1, sens);
+			}
+		}
+		return false;
 	}
     	
     	
