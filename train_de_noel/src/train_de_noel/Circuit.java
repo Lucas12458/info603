@@ -71,7 +71,7 @@ public class Circuit {
 	public Rails ajouterRailBranche(Aiguillage source, Aiguillage dest, TypeRail type) {
 	    Rails nouveauRail;
 
-	    // 1. Instanciation (Logique habituelle)
+	    
 	    if (type.equals(TypeRail.passageNiveau)) {
 	        nouveauRail = new PassageNiveau(type);
 	    } else if (type.equals(TypeRail.aiguillage)) {
@@ -80,27 +80,26 @@ public class Circuit {
 	        nouveauRail = new Rails(type);
 	    }
 
-	    // 2. Si c'est le tout premier rail de la déviation
+	    
 	    if (source.getBrancheB() == null) {
 	        source.setBrancheB(nouveauRail);
 	        nouveauRail.setPrecedent(source);
 	        
-	        // On ferme la branche vers la destination choisie
+	       
 	        nouveauRail.setSuivant(dest);
 	    } 
 	    else {
-	        // 3. Sinon, on parcourt la branche existante pour trouver la fin
-	        // La fin est le rail dont le 'suivant' est actuellement 'dest'
+	       
 	        Rails courant = source.getBrancheB();
 	        while (courant.getSuivant() != dest) {
 	            courant = courant.getSuivant();
 	        }
 
-	        // On insère le nouveau rail entre 'courant' et 'dest'
+	       
 	        courant.setSuivant(nouveauRail);
 	        nouveauRail.setPrecedent(courant);
 	        
-	        // Le nouveau devient le dernier et pointe vers dest
+	      
 	        nouveauRail.setSuivant(dest);
 	    }
 
@@ -111,6 +110,7 @@ public class Circuit {
 	
 	@Override
 	public String toString() {
+		if (this.premierRail == null) return "Circuit vide";
 	    StringBuilder sb = new StringBuilder();
 	    sb.append("Circuit [sens=").append(sens).append(", rails=[");
 

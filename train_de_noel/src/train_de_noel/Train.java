@@ -10,10 +10,9 @@ public class Train implements Runnable{
    
     private volatile boolean etat = false;
     
-    public Train(String sens,TypeVoiture type){
+    public Train(String sens){
     	this.sensCirculation = sens;
-    	this.voitureTete = new Voiture(type);
-    	this.taille = 1;
+    	
 
 
     }
@@ -91,11 +90,16 @@ public class Train implements Runnable{
     	
     	
     public void ajouterVoiture(TypeVoiture type) {
+    	if(this.voitureTete == null) {
+    		this.voitureTete = new Voiture(type);
+    		this.taille = 1;
+    	}
+    	else {
     	
-    	Voiture voiture = new Voiture(type);
-    	this.obtenirVoitureQueue().setVoitureSuivante(voiture);
-    	this.taille++;
-    	
+    		Voiture voiture = new Voiture(type);
+    		this.obtenirVoitureQueue().setVoitureSuivante(voiture);
+    		this.taille++;
+    	}
     	
     }
     
