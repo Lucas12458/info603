@@ -1,5 +1,8 @@
 package train_de_noel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Circuit {
 	private Rails premierRail;
@@ -108,27 +111,82 @@ public class Circuit {
 	
 	
 	
+	
+
+	public List<Rails> obtenirListeRails() {
+	    List<Rails> liste = new ArrayList<>();
+	    if (this.premierRail == null) { 
+	    	return liste;
+	    }
+
+	    Rails courant = this.premierRail;
+	    do {
+	        liste.add(courant);
+	        courant = courant.getSuivant();
+	    } while (courant != this.premierRail);
+
+	    return liste;
+	}
+	
+	public List<Aiguillage> obtenirAiguillages() {
+	    List<Aiguillage> liste = new ArrayList<>();
+	    if (this.premierRail == null) return liste;
+
+	    Rails courant = this.premierRail;
+	    do {
+	        if (courant instanceof Aiguillage) {
+	            liste.add((Aiguillage) courant);
+	        }
+	        courant = courant.getSuivant();
+	    } while (courant != this.premierRail);
+
+	    return liste;
+	}
+	
+	
+	
 	@Override
 	public String toString() {
-		if (this.premierRail == null) return "Circuit vide";
+	    if (this.premierRail == null) return "Circuit vide";
+
 	    StringBuilder sb = new StringBuilder();
 	    sb.append("Circuit [sens=").append(sens).append(", rails=[");
 
-	    if (this.premierRail != null) {
-	        Rails courant = this.premierRail;
-	        
-	      
-	        do {
-	            sb.append(courant.getType());
-	            courant = courant.getSuivant(); 
-	            
-	            if (courant != this.premierRail) {
-	                sb.append(" <-> ");
+	    Rails courant = this.premierRail;
+	    do {
+	       
+	        sb.append(courant.getType());
+
+	       
+	        if (courant instanceof Aiguillage) {
+	            Aiguillage a = (Aiguillage) courant;
+	            sb.append("(pos:").append(a.getPosition()).append(")");
+
+	           
+	            if (a.getBrancheB() != null) {
+	                sb.append(" {Branche B -> ");
+	                
+	                Rails railB = a.getBrancheB();
+	               
+	                while (railB != null && !(railB instanceof Aiguillage)) {
+	                    sb.append(railB.getType()).append(" -> ");
+	                    railB = railB.getSuivant();
+	                }
+	                
+	                if (railB != null) {
+	                    sb.append("Rejoint ").append(railB.getType());
+	                } else {
+	                    sb.append("Cul-de-sac");
+	                }
+	                sb.append("}");
 	            }
-	        } while (courant != this.premierRail);
-	    } else {
-	        sb.append("aucun rail");
-	    }
+	        }
+
+	        courant = courant.getSuivant();
+	        if (courant != this.premierRail) {
+	            sb.append(" <-> ");
+	        }
+	    } while (courant != this.premierRail);
 
 	    sb.append("]]");
 	    return sb.toString();

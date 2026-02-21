@@ -1,5 +1,7 @@
 package train_de_noel;
 
+import java.util.List;
+
 public class Menus {
 	
 	public Menus() {
@@ -83,7 +85,8 @@ public class Menus {
     	sb.append("2 - Afficher le train"+"\n");
     	sb.append("3 - Poser le train sur les rails"+"\n");
     	sb.append("4 - Démarrer le train"+"\n");
-    	sb.append("5 - Quitter"+"\n");
+    	sb.append("5 - Arrêter le train"+"\n");
+    	sb.append("6 - Quitter"+"\n");
     	sb.append("============================="+"\n");
     	sb.append("Votre choix : ");
     	
@@ -103,6 +106,28 @@ public class Menus {
     	
     	return sb.toString();
     	
+    }
+    
+    public String afficheMenuSelectionRail(List<Rails> rails) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n=== Choix du rail de départ ===\n");
+        
+        for (int i = 0; i < rails.size(); i++) {
+            sb.append(String.format("%2d - %s\n", (i + 1), rails.get(i).getType()));
+        }
+        
+        sb.append("\nEntrez le numéro du rail choisi : ");
+        return sb.toString();
+    }
+    
+    public String afficheMenuSelectionAiguillage(List<Aiguillage> liste, String message) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n--- ").append(message).append(" ---\n");
+        for (int i = 0; i < liste.size(); i++) {
+            sb.append(String.format("%2d - Aiguillage (ID: %h)\n", (i + 1), liste.get(i)));
+        }
+        sb.append("\nVotre choix : ");
+        return sb.toString();
     }
     
     

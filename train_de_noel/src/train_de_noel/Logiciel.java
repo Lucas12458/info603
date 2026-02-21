@@ -1,5 +1,7 @@
 package train_de_noel;
 
+import java.util.List;
+
 import in.keyboard.Keyboard;
 
 public class Logiciel {
@@ -24,7 +26,7 @@ public class Logiciel {
 				
 				
 				
-				while(!menu.quitter(choix, 3)) {
+				while(!menu.quitter(choix, 4)) {
 					System.out.println(menu.afficheMenuCircuit());
 					
 					choix = choix();
@@ -35,6 +37,37 @@ public class Logiciel {
 					case 2:
 						System.out.println(getCircuit().toString());
 						break;
+						
+					case 3:
+					    List<Aiguillage> aiguillages = getCircuit().obtenirAiguillages();
+					    
+					    if (aiguillages.isEmpty()) {
+					        System.err.println("Aucun aiguillage trouvé dans le circuit principal.");
+					    } else {
+					       
+					        System.out.print(menu.afficheMenuSelectionAiguillage(aiguillages, "Choisir l'aiguillage de départ"));
+					        int idxSource = choix() - 1;
+
+					       
+					        System.out.print(menu.afficheMenuSelectionAiguillage(aiguillages, "Choisir l'aiguillage de destination"));
+					        int idxDest = choix() - 1;
+
+					        if (idxSource >= 0 && idxSource < aiguillages.size() && idxDest >= 0 && idxDest < aiguillages.size()) {
+					            Aiguillage source = aiguillages.get(idxSource);
+					            Aiguillage dest = aiguillages.get(idxDest);
+
+					            
+					            TypeRail type = ajouterRailsCircuit(menu);
+					            
+					            if (type != null) {
+					                getCircuit().ajouterRailBranche(source, dest, type);
+					                System.out.println("Rail ajouté sur la branche B de l'aiguillage.");
+					            }
+					        } else {
+					            System.err.println("Selection invalide.");
+					        }
+					    }
+					    break;
 						
 					}
 					
@@ -113,11 +146,51 @@ public class Logiciel {
 							break;
 						
 						case 3:
+							if (getTrain() != null && getCircuit() != null) {
+						        
+						        List<Rails> railsDisponibles = getCircuit().obtenirListeRails();
+
+						        System.out.print(menu.afficheMenuSelectionRail(railsDisponibles));
+
+						        int indexChoisi = choix() - 1;
+
+						        if (indexChoisi >= 0 && indexChoisi < railsDisponibles.size()) {
+						            getTrain().poserSurCircuit(railsDisponibles.get(indexChoisi));
+						            System.out.println("Train installé.");
+						        } else {
+						            System.err.println("Choix invalide.");
+						        }
+						    }
+							
 							break;
 						
 						case 4:
-							Thread threadTrain = new Thread(getTrain());
-							threadTrain.start();
+						   
+						    if(getTrain().obtenirVoitureTete().getRail() != null) {
+						        if (!getTrain().isEtat()) { 
+						            Thread threadTrain = new Thread(getTrain());
+						            threadTrain.start();
+						            System.out.println(Couleurs.VERT + "Le train s'élance !" + Couleurs.RESET);
+						            System.out.println(Couleurs.JAUNE + "Appuyez sur 5 pour l'arrêter" + Couleurs.RESET);
+						        } else {
+						            System.out.println(Couleurs.JAUNE + "Le train roule déjà !" + Couleurs.RESET);
+						        }
+						    } else {
+						        System.err.println("Veuillez poser le train sur les rails");
+						    }
+						    break;
+							
+						case 5:
+							if (getTrain().isEtat()) { 
+								getTrain().arreter();
+							}
+						
+							else {
+								System.out.println(Couleurs.JAUNE + "Le train est déjà à l'arrêt !" + Couleurs.RESET);
+							}
+							break;
+							
+						case 6:
 							break;
 							
 						default:
@@ -126,7 +199,7 @@ public class Logiciel {
 						}
 						
 					}
-					while(!menu.quitter(choix, 5));
+					while(!menu.quitter(choix, 6));
 				
 					
 					
@@ -134,19 +207,25 @@ public class Logiciel {
 					
 					
 					
-			}
-			else if(getTrain() != null) {
-				System.err.println("Veuillez créer un train");
-				
-			}
-			else if(getCircuit() != null) {
-				System.err.println("Veuillez créer un circuit");
-				
-			}
-			
-			else {
-				System.err.println("Veuillez créer un train et un circuit");
-			}
+				} 
+				else {
+				    
+					String messageErreur = "";
+			        
+			        if (getTrain() == null && getCircuit() == null) {
+			            messageErreur = "Veuillez créer un train ET un circuit.";
+			        } 
+			        else if (getTrain() == null) {
+			            messageErreur = "Veuillez créer un train.";
+			        } 
+			        else {
+			            messageErreur = "Veuillez créer un circuit.";
+			        }
+			        
+			        System.out.println(Couleurs.ROUGE +"Erreur : "+messageErreur+ Couleurs.RESET);
+			        System.out.println("Appuyez sur Entrée pour continuer...");
+			        Keyboard.getString();
+				}
 			
 			break;
 			
@@ -161,6 +240,7 @@ public class Logiciel {
 			
 			
 		}
+		System.out.println("================================="+"\n");
     }
     
     public static Circuit getCircuit() {
@@ -180,70 +260,8 @@ public class Logiciel {
     }
 
 	public Logiciel() {
-    	/*String sens = "antihoraire";
 		
-    	this.train = new Train(sens,TypeVoiture.Locomotive);
-    	
-    	Thread threadTrain = new Thread(this.train);
-    	
-    	train.ajouterVoiture(TypeVoiture.Wagon);
-    	train.ajouterVoiture(TypeVoiture.VoitureVoyageur);
-    	
-    	this.circuit = new Circuit(sens);
-    	
-    	Aiguillage aiguillage2 = (Aiguillage) circuit.ajouterRail(TypeRail.aiguillage);
-    	
-    	circuit.ajouterRail(TypeRail.virage_gauche);
-    	circuit.ajouterRail(TypeRail.droit);
-    	circuit.ajouterRail(TypeRail.virage_gauche);
-    	circuit.ajouterRail(TypeRail.passageNiveau);
-    	circuit.ajouterRail(TypeRail.droit);
-    	
-    	Aiguillage aiguillage1 = (Aiguillage) circuit.ajouterRail(TypeRail.aiguillage);
-    	
-    	circuit.ajouterRail(TypeRail.droit);
-    	circuit.ajouterRail(TypeRail.virage_gauche);
-    	
-    	
-    	
-    	//
-    	circuit.ajouterRailBranche(aiguillage1, aiguillage2, TypeRail.droit);
-    	
-    	
-    	
-    	System.out.println(this.train.toString());
-    	aiguillage1.changerPosition();
-    	
-    	//train.choisirSens();
-    	
-    	//System.out.println(this.train.toString());
-    	
-    	
-    	System.out.println(this.circuit.toString());
-    	
-    	
-    	train.poserSurCircuit(circuit.getPremierRail());
-    	
-    	threadTrain.start();
-    	
-    	
-    	try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	this.train.arreter();
-    	*/
-    	
-
-    	
-    	
-    	
-    	    	
-    	
-    }
+	}
     
     public static int choix() {
 		int choix = Keyboard.getInt();

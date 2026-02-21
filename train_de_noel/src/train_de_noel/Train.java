@@ -20,7 +20,7 @@ public class Train implements Runnable{
     @Override
 	public void run() {
     	 this.etat = true;
-         System.out.println("Demarrage du train");
+         System.out.println(Couleurs.VERT+"Demarrage du train"+Couleurs.RESET);
          
          while(this.etat) {
             
@@ -64,7 +64,15 @@ public class Train implements Runnable{
 	}
     
 
-    public void choisirSens() {
+    public boolean isEtat() {
+		return etat;
+	}
+
+	public void setEtat(boolean etat) {
+		this.etat = etat;
+	}
+
+	public void choisirSens() {
     	if(this.sensCirculation.equals("horaire")) {
     		this.sensCirculation = "antihoraire";
     	}
@@ -122,7 +130,7 @@ public class Train implements Runnable{
     
     public boolean arreter() {
     	this.etat = false;
-    	System.out.println("Arrêt du train");
+    	System.out.println(Couleurs.ROUGE+"Arrêt du train"+Couleurs.RESET);
     	return true;
     }
 
